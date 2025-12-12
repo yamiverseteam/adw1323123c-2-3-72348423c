@@ -2,7 +2,7 @@ export const loginModalContent = `
 <div class="login-modal">
   <div class="login-content">
     <div class="logo-container" id="loginLogo">
-      <img src="assets/logo.svg" alt="Logo de Inicio de Sesión" style="max-width: 200px; height: auto;">
+      <img src="https://cdn.jsdelivr.net/gh/yamiverseteam/adw1323123c-2-3-72348423c@main/assets/logo.svg" alt="Logo de Inicio de Sesión" style="max-width: 200px; height: auto;">
     </div>
     <h2>Iniciar Sesión</h2>
     <p>
@@ -36,9 +36,9 @@ export const loginModalContent = `
       <button type="submit">Ingresar</button>
     </form>
     <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px;">
-      <img id="mundo-logo" src="assets/mundo.svg" alt="Logo Mundo" style="max-width: 100px; height: auto; margin-right: 5px;">
+      <img id="mundo-logo" src="ttps://cdn.jsdelivr.net/gh/yamiverseteam/adw1323123c-2-3-72348423c@main/assets/mundo.svg" alt="Logo Mundo" style="max-width: 100px; height: auto; margin-right: 5px;">
       <span style="font-size: 24px; font-weight: bold; margin-right: 5px;">X</span>
-      <img id="konecta-logo" src="assets/konecta.svg" alt="Logo Konecta" style="max-width: 100px; height: auto;">
+      <img id="konecta-logo" src="https://cdn.jsdelivr.net/gh/yamiverseteam/adw1323123c-2-3-72348423c@main/assets/konecta.svg" alt="Logo Konecta" style="max-width: 100px; height: auto;">
     </div>
   </div>
 </div>`;
