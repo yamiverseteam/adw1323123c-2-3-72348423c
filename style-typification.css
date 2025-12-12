@@ -1,0 +1,77 @@
+/* General Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.modal-content {
+  background-color: var(--bg-secondary);
+  margin: auto;
+  padding: 20px;
+  border: 1px solid var(--accent-primary);
+  width: 80%; /* Could be responsive */
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  color: var(--text-primary);
+}
+
+.modal-content h2 {
+  color: var(--accent-primary);
+  margin-top: 0;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Tipificacion Options */
+.tipificacion-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tipificacion-options .button {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 1.1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  border: none;
+}
+
+.tipificacion-options .button:hover {
+  background-color: var(--accent-hover);
+}
+
+.tipificacion-options .button-danger {
+  background-color: var(--danger-color);
+}
+
+.tipificacion-options .button-danger:hover {
+  background-color: #dc2626; /* A slightly darker red for hover */
+}
+
+/* Selected Typification Display */
+.selected-typification {
+  text-align: center;
+  padding: 10px;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}

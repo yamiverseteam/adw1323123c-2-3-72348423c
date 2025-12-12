@@ -1,0 +1,125 @@
+/* style-logout-modal.css */
+
+.logout-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.logout-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.logout-modal-content {
+  background-color: var(--background-color);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+}
+
+.logout-modal-overlay.active .logout-modal-content {
+  transform: translateY(0);
+}
+
+.logout-modal-title {
+  color: var(--text-color);
+  margin-bottom: 15px;
+  font-size: 1.8em;
+  font-weight: bold;
+}
+
+.logout-modal-message {
+  color: var(--text-color-light);
+  margin-bottom: 30px;
+  font-size: 1.1em;
+  line-height: 1.5;
+}
+
+.logout-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.logout-modal-button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: 600;
+}
+
+.logout-modal-button.confirm {
+  background-color: var(--primary-button-color);
+  color: var(--button-text-color);
+}
+
+.logout-modal-button.confirm:hover {
+  background-color: var(--primary-button-hover-color);
+  transform: translateY(-2px);
+}
+
+.logout-modal-button.cancel {
+  background-color: var(--secondary-button-color);
+  color: var(--button-text-color);
+}
+
+.logout-modal-button.cancel:hover {
+  background-color: var(--secondary-button-hover-color);
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .logout-modal-content {
+    padding: 20px;
+    width: 95%;
+  }
+
+  .logout-modal-title {
+    font-size: 1.5em;
+  }
+
+  .logout-modal-message {
+    font-size: 1em;
+  }
+
+  .logout-modal-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .logout-modal-button {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .logout-modal-content {
+    max-width: 450px;
+  }
+
+  .logout-modal-button {
+    padding: 12px 30px;
+  }
+}
