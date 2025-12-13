@@ -661,7 +661,7 @@ document.body.innerHTML = `
             <div class="questions-column">
               <div class="form-group">
                 <label for="suministroElectrico"
-                  >¿Tiene suministro eléctrico? <span class="survey-badge badge-sondeo"><i class="material-icons">poll</i> Sondeo</span> <span style="color: var(--danger-color);">*</span></label
+                  >¿Tiene suministro eléctrico? <span style="color: var(--danger-color);">*</span></label
                 >
                 <select id="suministroElectrico">
                   <option value="" disabled selected>Seleccione</option>
@@ -673,7 +673,7 @@ document.body.innerHTML = `
 
               <div class="form-group">
                 <label for="generadorElectrico"
-                  >¿Tiene generador eléctrico? <span class="survey-badge badge-sondeo"><i class="material-icons">poll</i> Sondeo</span> <span style="color: var(--danger-color);">*</span></label
+                  >¿Tiene generador eléctrico? <span style="color: var(--danger-color);">*</span></label
                 >
                 <select id="generadorElectrico">
                   <option value="" disabled selected>Seleccione</option>
@@ -684,7 +684,7 @@ document.body.innerHTML = `
               </div>
 
               <div class="form-group">
-                <label for="tiempoFalla">¿Desde cuándo presenta la falla? <span class="survey-badge badge-sondeo"><i class="material-icons">poll</i> Sondeo</span> <span class="survey-badge badge-persiste"><i class="material-icons">history</i> Persiste</span> <span style="color: var(--danger-color);">*</span></label>
+                <label for="tiempoFalla">¿Desde cuándo presenta la falla? <span style="color: var(--danger-color);">*</span></label>
                 <input type="datetime-local" id="tiempoFalla" />
               </div>
 
@@ -719,7 +719,7 @@ document.body.innerHTML = `
               </div>
 
               <div class="form-group">
-                <label for="motivoComunicacion">¿Por qué se comunica el cliente? <span class="survey-badge badge-sondeo"><i class="material-icons">poll</i> Sondeo</span> <span style="color: var(--danger-color);">*</span></label>
+                <label for="motivoComunicacion">¿Por qué se comunica el cliente? <span style="color: var(--danger-color);">*</span></label>
                 <select id="motivoComunicacion" onchange="window.toggleMotivoComunicacionOtros()">
                   <option value="" disabled selected>Seleccione</option>
                   <option value="Por servicio de internet">Por servicio de internet</option>
@@ -808,7 +808,7 @@ document.body.innerHTML = `
               <div class="form-group">
                 <label for="instalacionReparacion"
                   >¿El cliente se está comunicando por inconvenientes que hubo al
-                  momento de la instalación o reparación? <span class="survey-badge badge-sondeo"><i class="material-icons">poll</i> Sondeo</span> <span style="color: var(--danger-color);">*</span></label
+                  momento de la instalación o reparación? <span style="color: var(--danger-color);">*</span></label
                 >
                 <select id="instalacionReparacion">
                   <option value="" disabled selected>Seleccione</option>
@@ -854,7 +854,7 @@ document.body.innerHTML = `
               </div>
 
               <div class="form-group">
-                <label for="estadoLuces">¿Tiene luces? ¿En qué estado? <span class="survey-badge badge-sondeo"><i class="material-icons">poll</i> Sondeo</span> <span class="survey-badge badge-persiste"><i class="material-icons">history</i> Persiste</span> <span style="color: var(--danger-color);">*</span></label>
+                <label for="estadoLuces">¿Tiene luces? ¿En qué estado? <span style="color: var(--danger-color);">*</span></label>
                 <select id="estadoLuces">
                   <option value="" disabled selected>Seleccione</option>
                   <option value="Luces Verdes (sin intermitencia)">
@@ -916,7 +916,7 @@ document.body.innerHTML = `
               </div>
 
               <div class="form-group">
-                <label for="perdidaMonitoreo">¿Tiene perdida de monitoreo? <span class="survey-badge badge-persiste"><i class="material-icons">history</i> Persiste</span> <span style="color: var(--danger-color);">*</span></label>
+                <label for="perdidaMonitoreo">¿Tiene perdida de monitoreo? <span style="color: var(--danger-color);">*</span></label>
                 <select id="perdidaMonitoreo">
                   <option value="" disabled selected>Seleccione</option>
                   <option value="SI">SI</option>
@@ -925,7 +925,7 @@ document.body.innerHTML = `
               </div>
 
               <div class="form-group">
-                <label for="clienteConectadoPor">El Cliente se Encuentra Conectado Por <span class="survey-badge badge-persiste"><i class="material-icons">history</i> Persiste</span> <span style="color: var(--danger-color);">*</span></label>
+                <label for="clienteConectadoPor">El Cliente se Encuentra Conectado Por <span style="color: var(--danger-color);">*</span></label>
                 <select id="clienteConectadoPor">
                   <option value="" disabled selected>Seleccione</option>
                   <option value="WIFI">WIFI</option>
@@ -935,7 +935,7 @@ document.body.innerHTML = `
               </div>
 
               <div class="form-group">
-                <label for="estadoOntPersiste">¿Qué Estado Presenta la ONT? <span class="survey-badge badge-persiste"><i class="material-icons">history</i> Persiste</span> <span style="color: var(--danger-color);">*</span></label>
+                <label for="estadoOntPersiste">¿Qué Estado Presenta la ONT? <span style="color: var(--danger-color);">*</span></label>
                 <select id="estadoOntPersiste">
                   <option value="" disabled selected>Seleccione</option>
                   <option value="CONECTADO">CONECTADO</option>
@@ -948,7 +948,7 @@ document.body.innerHTML = `
               </div>
 
               <div class="form-group">
-                <label for="redesUnificadas">¿Redes Unificadas? <span class="survey-badge badge-persiste"><i class="material-icons">history</i> Persiste</span> <span style="color: var(--danger-color);">*</span></label>
+                <label for="redesUnificadas">¿Redes Unificadas? <span style="color: var(--danger-color);">*</span></label>
                 <select id="redesUnificadas" onchange="window.toggleRedesUnificadasOtros()">
                   <option value="" disabled selected>Seleccione</option>
                   <option value="SI">SI</option>

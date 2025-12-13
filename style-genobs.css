@@ -641,41 +641,96 @@
     }
   }
 
-  /* Survey Badges */
+  /* Survey Badges - Keyboard Key Style */
   .genobs-feature .survey-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.7rem;
+    gap: 5px;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 2px 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    padding: 4px 8px;
     border-radius: 6px;
-    /* Small rounded corners */
     margin-left: 8px;
     vertical-align: middle;
-    border: 1px solid currentColor;
-    opacity: 0.9;
+
+    /* Key styling */
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-bottom-width: 3px;
+    color: #334155;
+    /* Default dark text */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+    opacity: 1;
     letter-spacing: 0.3px;
+    text-transform: none;
+    /* Reset uppercase if set previously */
+    line-height: 1;
+    transition: all 0.1s ease;
+  }
+
+  /* Optional: Press effect */
+  .genobs-feature .survey-badge:active {
+    border-bottom-width: 1px;
+    transform: translateY(2px);
   }
 
   .genobs-feature .survey-badge .material-icons {
-    font-size: 13px;
+    display: none;
+  }
+
+  .genobs-feature .badge-sondeo::before {
+    content: "poll";
+    font-family: "Material Icons";
+    font-size: 14px;
+    /* Slightly larger for key style */
+    color: var(--accent-primary);
+    /* Keep icon colored */
+    margin-right: 0;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    display: inline-block;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
   }
 
   .genobs-feature .badge-sondeo {
-    color: var(--accent-primary);
-    background-color: rgba(161, 159, 14, 0.1);
-    /* Light accent background */
+    /* Override previous specific styles if needed, or keep them for text color */
+    color: #334155;
+    /* Keep text neutral */
+  }
+
+  .genobs-feature .badge-persiste::before {
+    content: "history";
+    font-family: "Material Icons";
+    font-size: 14px;
+    color: #3b82f6;
+    /* Keep icon colored */
+    margin-right: 0;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    display: inline-block;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
   }
 
   .genobs-feature .badge-persiste {
-    color: #3b82f6;
-    /* Blue-ish color for Persiste */
-    background-color: rgba(59, 130, 246, 0.1);
-  }
-
-  .genobs-feature .badge-info {
-    color: var(--text-secondary);
-    background-color: rgba(128, 128, 128, 0.1);
-    border-color: var(--text-secondary);
+    color: #334155;
   }
