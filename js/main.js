@@ -732,229 +732,256 @@ window.limpiarTipificacion = () => {
 
 
 
+// Global guard variables for generation
+let isGeneratingFinalObservation = false;
+let lastGenerationTime = 0;
+
 window.generarObservacionFinal = () => {
-  // Log start of final generation
-  addLogEntry('execution', 'Iniciando generación de observación final...');
-
-  if (!validateGenobsForm()) {
-    addLogEntry('failure', 'Error en generación final: Validación de formulario fallida.');
-    return; // Stop if validation fails
+  // Prevent re-entrance (recursion or parallel calls)
+  if (isGeneratingFinalObservation) {
+    console.warn("generarObservacionFinal: Skipped (already running)");
+    return;
   }
 
-  // Collect all survey data from both main form and genobs modal
-  collectSurveyData();
+  // Prevent rapid-fire execution (debounce/throttle) - 1 second cooldown
+  const now = Date.now();
+  if (now - lastGenerationTime < 1000) {
+    console.warn("generarObservacionFinal: Skipped (cooldown)");
+    return;
+  }
 
-  const {
-    RUT,
-    "SERVICIO CON LA FALLA": servicioFalla,
-    TELÉFONO,
-    "DIRECCIÓN CLIENTE": direccionCliente,
-    ONT,
-    OLT,
-    TARJETA,
-    PUERTO,
-    NODO,
-    "Suministro Eléctrico": suministroElectrico,
-    "Generador Eléctrico": generadorElectrico,
-    "Desde Cuando Presenta la Falla": tiempoFalla,
-    "Tipo de servicio": tipoServicio,
-    "Inconvenientes Instalación/Reparación": instalacionReparacion,
-    "Estado Luces": estadoLuces,
-    "Estado ONT": estadoOnt,
-    "Cliente Masiva": clienteMasiva,
-    "Falla Masiva": fallaMasiva,
-    "Visita Técnica": visitaTecnica,
-    "Soporte Generado": soporteGenerado,
-    "OBSERVACIÓN CON INFORMACIÓN COMPLETA EN LA VARIBALE SONDEO":
-    observacionCompletaSondeo,
-    "Falla Respuesta Genobs": fallaRespuestaGenobs,
-    "Control Remoto": controlRemoto,
-    "Cambio Pilas": cambioPilas,
-    "Prueba Cruzada": pruebaCruzada,
-    "El cliente es reincidente": clienteReincidente,
-    Decodificador,
-    "Reinicio Eléctrico": reinicioElectrico,
-    "Cable HDMI/AV": cableHDMIAV,
-    "Observacion TV": observacionTV,
-  } = formDataForSurvey;
+  try {
+    isGeneratingFinalObservation = true;
+    lastGenerationTime = now;
 
-  // Save all survey data to local storage in the 'sondeo' variable
-  localStorage.setItem("sondeo", JSON.stringify(formDataForSurvey));
+    // Log start of final generation
+    addLogEntry('execution', 'Iniciando generación de observación final...');
 
-  // Construct the 'sondeo' string for the main observation form
-  let sondeo = ``; // Removed "OBS: "
-  if (tiempoFalla) sondeo += `Desde Cuando Presenta la Falla:${tiempoFalla}\n`;
-  if (suministroElectrico)
-    sondeo += `Tiene Suministro Eléctrico ?: ${suministroElectrico}\n`;
-  if (generadorElectrico)
-    sondeo += `Tiene Generador Electrico ?: ${generadorElectrico}\n`;
-  if (estadoOnt) sondeo += `Estado ONT:${estadoOnt}\n`;
-  if (clienteMasiva) sondeo += `Cliente Masiva:${clienteMasiva}\n`;
-  if (fallaMasiva) sondeo += `Falla Masiva:${fallaMasiva}\n`;
-  if (visitaTecnica) sondeo += `Visita Técnica:${visitaTecnica}\n`;
-  if (controlRemoto)
-    sondeo += `¿El control remoto funciona en su totalidad?:${controlRemoto}\n`;
-  if (cambioPilas)
-    sondeo += `¿Se realizaron cambios de pilas del control remoto?:${cambioPilas}\n`;
-  if (pruebaCruzada) sondeo += `¿Se hizo prueba cruzada?:${pruebaCruzada}\n`;
-  sondeo += `Tiene perdida de monitoreo: Si\n`; // Always add this line
-  if (soporteGenerado) sondeo += `Soporte Generado:${soporteGenerado}\n`;
-  if (instalacionReparacion && instalacionReparacion !== "No")
-    sondeo += `Inconvenientes Instalación/Reparación: ${instalacionReparacion}\n`;
-  if (fallaRespuestaGenobs)
-    sondeo += `Falla Respuesta Genobs: ${fallaRespuestaGenobs}\n`;
-  if (observacionCompletaSondeo) {
-    // Apply cleaning similar to survey.js for this specific observation
-    let cleanedSondeoObservationForForm = observacionCompletaSondeo
-      .replace("obs: ", "")
-      .replace("OBS:", "");
-    cleanedSondeoObservationForForm = cleanedSondeoObservationForForm
-      .replace(/, ,/g, ",")
-      .replace(/  +/g, " ")
-      .trim();
-    cleanedSondeoObservationForForm = cleanedSondeoObservationForForm.replace(
-      /(SI|NO|Si|No|si|no)\s*([A-Z¿])/g,
-      "$1\n$2"
+    if (!validateGenobsForm()) {
+      addLogEntry('failure', 'Error en generación final: Validación de formulario fallida.');
+      return; // Stop if validation fails
+    }
+
+    // Collect all survey data from both main form and genobs modal
+    collectSurveyData();
+
+    const {
+      RUT,
+      "SERVICIO CON LA FALLA": servicioFalla,
+      TELÉFONO,
+      "DIRECCIÓN CLIENTE": direccionCliente,
+      ONT,
+      OLT,
+      TARJETA,
+      PUERTO,
+      NODO,
+      "Suministro Eléctrico": suministroElectrico,
+      "Generador Eléctrico": generadorElectrico,
+      "Desde Cuando Presenta la Falla": tiempoFalla,
+      "Tipo de servicio": tipoServicio,
+      "Inconvenientes Instalación/Reparación": instalacionReparacion,
+      "Estado Luces": estadoLuces,
+      "Estado ONT": estadoOnt,
+      "Cliente Masiva": clienteMasiva,
+      "Falla Masiva": fallaMasiva,
+      "Visita Técnica": visitaTecnica,
+      "Soporte Generado": soporteGenerado,
+      "OBSERVACIÓN CON INFORMACIÓN COMPLETA EN LA VARIBALE SONDEO":
+      observacionCompletaSondeo,
+      "Falla Respuesta Genobs": fallaRespuestaGenobs,
+      "Control Remoto": controlRemoto,
+      "Cambio Pilas": cambioPilas,
+      "Prueba Cruzada": pruebaCruzada,
+      "El cliente es reincidente": clienteReincidente,
+      Decodificador,
+      "Reinicio Eléctrico": reinicioElectrico,
+      "Cable HDMI/AV": cableHDMIAV,
+      "Observacion TV": observacionTV,
+    } = formDataForSurvey;
+
+    // Save all survey data to local storage in the 'sondeo' variable
+    localStorage.setItem("sondeo", JSON.stringify(formDataForSurvey));
+
+    // Construct the 'sondeo' string for the main observation form
+    let sondeo = ``; // Removed "OBS: "
+    if (tiempoFalla) sondeo += `Desde Cuando Presenta la Falla:${tiempoFalla}\n`;
+    if (suministroElectrico)
+      sondeo += `Tiene Suministro Eléctrico ?: ${suministroElectrico}\n`;
+    if (generadorElectrico)
+      sondeo += `Tiene Generador Electrico ?: ${generadorElectrico}\n`;
+    if (estadoOnt) sondeo += `Estado ONT:${estadoOnt}\n`;
+    if (clienteMasiva) sondeo += `Cliente Masiva:${clienteMasiva}\n`;
+    if (fallaMasiva) sondeo += `Falla Masiva:${fallaMasiva}\n`;
+    if (visitaTecnica) sondeo += `Visita Técnica:${visitaTecnica}\n`;
+    if (controlRemoto)
+      sondeo += `¿El control remoto funciona en su totalidad?:${controlRemoto}\n`;
+    if (cambioPilas)
+      sondeo += `¿Se realizaron cambios de pilas del control remoto?:${cambioPilas}\n`;
+    if (pruebaCruzada) sondeo += `¿Se hizo prueba cruzada?:${pruebaCruzada}\n`;
+    sondeo += `Tiene perdida de monitoreo: Si\n`; // Always add this line
+    if (soporteGenerado) sondeo += `Soporte Generado:${soporteGenerado}\n`;
+    if (instalacionReparacion && instalacionReparacion !== "No")
+      sondeo += `Inconvenientes Instalación/Reparación: ${instalacionReparacion}\n`;
+    if (fallaRespuestaGenobs)
+      sondeo += `Falla Respuesta Genobs: ${fallaRespuestaGenobs}\n`;
+    if (observacionCompletaSondeo) {
+      // Apply cleaning similar to survey.js for this specific observation
+      let cleanedSondeoObservationForForm = observacionCompletaSondeo
+        .replace("obs: ", "")
+        .replace("OBS:", "");
+      cleanedSondeoObservationForForm = cleanedSondeoObservationForForm
+        .replace(/, ,/g, ",")
+        .replace(/  +/g, " ")
+        .trim();
+      cleanedSondeoObservationForForm = cleanedSondeoObservationForForm.replace(
+        /(SI|NO|Si|No|si|no)\s*([A-Z¿])/g,
+        "$1\n$2"
+      );
+      sondeo += `OBSERVACIÓN CON INFORMACIÓN COMPLETA EN LA VARIBALE SONDEO: ${cleanedSondeoObservationForForm}\n`;
+    }
+
+    // Construct the full observation for clipboard and history
+    let fullObservation = `NOMBRE: ${formDataForSurvey["NOMBRE"] || ""}\n`; // NOMBRE first
+
+    // Add main form data to full observation
+    const orderedKeys = [
+      "TARJETA",
+      "PUERTO",
+      "NODO",
+      "RUT",
+      "CONTRATO",
+      "DIRECCIÓN CLIENTE",
+      "ONT",
+      "OLT",
+    ];
+
+    orderedKeys.forEach((key) => {
+      if (formDataForSurvey[key] && formDataForSurvey[key] !== "No") {
+        fullObservation += `${key}: ${formDataForSurvey[key]}\n`;
+      }
+      if (key === "NODO") {
+        // Add the SOP, date, ID, TEL after NODO
+        const today = new Date();
+        const formattedDate = `${today.getDate()}/${today.getMonth() + 1
+          }/${today.getFullYear()}`;
+        fullObservation += `SOP ${formattedDate} ID: ${formDataForSurvey["ID"] || ""
+          } TEL: ${TELÉFONO || ""}\n`;
+      }
+    });
+
+    // Add CORREO to full observation
+    if (formDataForSurvey["CORREO"]) {
+      fullObservation += `Correo: ${formDataForSurvey["CORREO"]}\n`;
+    }
+
+    // Add genobs modal data and other survey-related fields to full observation
+    // Exclude NOMBRE from this section as it's now handled at the beginning
+    if (formDataForSurvey["CONTRATO"])
+      fullObservation += `CONTRATO: ${formDataForSurvey["CONTRATO"]}\n`;
+    if (tiempoFalla)
+      fullObservation += `Desde Cuando Presenta la Falla: ${tiempoFalla}\n`;
+    if (suministroElectrico)
+      fullObservation += `Tiene Suministro Eléctrico ?: ${suministroElectrico}\n`;
+    if (generadorElectrico)
+      fullObservation += `Tiene Generador Electrico ?: ${generadorElectrico}\n`;
+    if (estadoOnt) fullObservation += `Estado ONT: ${estadoOnt}\n`;
+    if (clienteMasiva) fullObservation += `Cliente Masiva: ${clienteMasiva}\n`;
+    if (fallaMasiva) fullObservation += `Falla Masiva: ${fallaMasiva}\n`;
+    if (visitaTecnica) fullObservation += `Visita Técnica: ${visitaTecnica}\n`;
+    if (controlRemoto) fullObservation += `Control Remoto: ${controlRemoto}\n`;
+    if (cambioPilas) fullObservation += `Cambio Pilas: ${cambioPilas}\n`;
+    if (pruebaCruzada) fullObservation += `Prueba Cruzada: ${pruebaCruzada}\n`;
+    fullObservation += `Tiene perdida de monitoreo: Si\n`; // Always add this line
+    if (soporteGenerado)
+      fullObservation += `Soporte Generado: ${soporteGenerado}\n`;
+    if (instalacionReparacion && instalacionReparacion !== "No")
+      fullObservation += `Inconvenientes Instalación/Reparación: ${instalacionReparacion}\n`;
+    if (fallaRespuestaGenobs)
+      fullObservation += `Falla Respuesta Genobs: ${fallaRespuestaGenobs}\n`;
+    if (clienteReincidente && clienteReincidente !== "No")
+      fullObservation += `El cliente es reincidente: ${clienteReincidente}\n`;
+    if (tipoServicio) fullObservation += `Tipo de servicio: ${tipoServicio}\n`;
+    if (formDataForSurvey["Tipo de servicio General"])
+      fullObservation += `Tipo de servicio General: ${formDataForSurvey["Tipo de servicio General"]}\n`;
+    if (estadoLuces)
+      fullObservation += `Tiene Luces en que estado ?: ${estadoLuces}\n`;
+    if (Decodificador) fullObservation += `Decodificador: ${Decodificador}\n`;
+    if (reinicioElectrico)
+      fullObservation += `Reinicio Eléctrico: ${reinicioElectrico}\n`;
+    if (cableHDMIAV) fullObservation += `Cable HDMI/AV: ${cableHDMIAV}\n`;
+    if (observacionTV) fullObservation += `Observacion TV: ${observacionTV}\n`;
+
+    // Special handling for "OBSERVACIÓN CON INFORMACIÓN COMPLETA EN LA VARIBALE SONDEO"
+    if (observacionCompletaSondeo) {
+      // Apply cleaning similar to survey.js for this specific observation
+      let cleanedSondeoObservation = observacionCompletaSondeo
+        .replace("obs: ", "")
+        .replace("OBS:", "");
+      cleanedSondeoObservation = cleanedSondeoObservation
+        .replace(/, ,/g, ",")
+        .replace(/  +/g, " ")
+        .trim();
+      cleanedSondeoObservation = cleanedSondeoObservation.replace(
+        /(SI|NO|Si|No|si|no)\s*([A-Z¿])/g,
+        "$1\n$2"
+      );
+
+      fullObservation += `${cleanedSondeoObservation}\n`;
+    }
+
+    // Apply formatting for better style (similar to survey.js)
+    // Update the main form's observation textarea
+    const observacionForm = document.getElementById("observacionForm");
+    observacionForm.value = sondeo; // Use .value for textareas
+
+    // Hide the "Observación Final Generada" section as it's no longer needed
+    document.getElementById("finalObservationContainer").style.display = "none";
+    document.getElementById("observacionFinal").style.display = "none";
+
+    // The "Enviar Sondeo" button is handled by generarObservacionPrincipal and limpiarFormulario
+
+    // Update the main observation container with the final, full observation
+    document.getElementById("observacionCompleta").value = fullObservation;
+
+    const rutForHistory = document.getElementById("clienteRUT")?.value || "N/A"; // Extract RUT directly from the form
+    const observacionCompletaText = document.getElementById(
+      "observacionCompleta"
+    ).value; // Get the text from observacionCompleta
+
+
+    copyToClipboard(fullObservation).then(success => {
+      if (!success) {
+        window.showNotification("No se pudo copiar al portapapeles automáticamente", "warning");
+      }
+      // Note: generarObservacionFinal closes 'genobs' modal at the end, 
+      // but doesn't explicitly open 'modalCopia' in the original code.
+      // If the user expects 'modalCopia' here too, we should add it, 
+      // but strictly following the original flow, we just copy.
+      // However, to be consistent with 'Principal', let's notify success via notification at least.
+      if (success) {
+        window.showNotification("Observación final copiada al portapapeles", "success");
+      }
+    });
+    guardarEnHistorial(
+      observacionCompletaText, // Use observacionCompleta text for history
+      rutForHistory,
+      { ...formDataForSurvey },
+      formDataForSurvey.surveyUrl, // Save the generated survey URL
+      formDataForSurveyPersiste.surveyUrl // Save the generated persiste URL
     );
-    sondeo += `OBSERVACIÓN CON INFORMACIÓN COMPLETA EN LA VARIBALE SONDEO: ${cleanedSondeoObservationForForm}\n`;
-  }
+    mostrarHistorial(); // Call mostrarHistorial to update the display
 
-  // Construct the full observation for clipboard and history
-  let fullObservation = `NOMBRE: ${formDataForSurvey["NOMBRE"] || ""}\n`; // NOMBRE first
-
-  // Add main form data to full observation
-  const orderedKeys = [
-    "TARJETA",
-    "PUERTO",
-    "NODO",
-    "RUT",
-    "CONTRATO",
-    "DIRECCIÓN CLIENTE",
-    "ONT",
-    "OLT",
-  ];
-
-  orderedKeys.forEach((key) => {
-    if (formDataForSurvey[key] && formDataForSurvey[key] !== "No") {
-      fullObservation += `${key}: ${formDataForSurvey[key]}\n`;
+    if (window.addLogEntry) {
+      window.addLogEntry('execution', 'Observación final generada correctamente.');
     }
-    if (key === "NODO") {
-      // Add the SOP, date, ID, TEL after NODO
-      const today = new Date();
-      const formattedDate = `${today.getDate()}/${today.getMonth() + 1
-        }/${today.getFullYear()}`;
-      fullObservation += `SOP ${formattedDate} ID: ${formDataForSurvey["ID"] || ""
-        } TEL: ${TELÉFONO || ""}\n`;
-    }
-  });
 
-  // Add CORREO to full observation
-  if (formDataForSurvey["CORREO"]) {
-    fullObservation += `Correo: ${formDataForSurvey["CORREO"]}\n`;
+    window.cerrarModal("genobs");
+  } catch (err) {
+    console.error("Error en generarObservacionFinal:", err);
+    addLogEntry('failure', `Error crítico en generación: ${err.message}`);
+  } finally {
+    isGeneratingFinalObservation = false;
   }
-
-  // Add genobs modal data and other survey-related fields to full observation
-  // Exclude NOMBRE from this section as it's now handled at the beginning
-  if (formDataForSurvey["CONTRATO"])
-    fullObservation += `CONTRATO: ${formDataForSurvey["CONTRATO"]}\n`;
-  if (tiempoFalla)
-    fullObservation += `Desde Cuando Presenta la Falla: ${tiempoFalla}\n`;
-  if (suministroElectrico)
-    fullObservation += `Tiene Suministro Eléctrico ?: ${suministroElectrico}\n`;
-  if (generadorElectrico)
-    fullObservation += `Tiene Generador Electrico ?: ${generadorElectrico}\n`;
-  if (estadoOnt) fullObservation += `Estado ONT: ${estadoOnt}\n`;
-  if (clienteMasiva) fullObservation += `Cliente Masiva: ${clienteMasiva}\n`;
-  if (fallaMasiva) fullObservation += `Falla Masiva: ${fallaMasiva}\n`;
-  if (visitaTecnica) fullObservation += `Visita Técnica: ${visitaTecnica}\n`;
-  if (controlRemoto) fullObservation += `Control Remoto: ${controlRemoto}\n`;
-  if (cambioPilas) fullObservation += `Cambio Pilas: ${cambioPilas}\n`;
-  if (pruebaCruzada) fullObservation += `Prueba Cruzada: ${pruebaCruzada}\n`;
-  fullObservation += `Tiene perdida de monitoreo: Si\n`; // Always add this line
-  if (soporteGenerado)
-    fullObservation += `Soporte Generado: ${soporteGenerado}\n`;
-  if (instalacionReparacion && instalacionReparacion !== "No")
-    fullObservation += `Inconvenientes Instalación/Reparación: ${instalacionReparacion}\n`;
-  if (fallaRespuestaGenobs)
-    fullObservation += `Falla Respuesta Genobs: ${fallaRespuestaGenobs}\n`;
-  if (clienteReincidente && clienteReincidente !== "No")
-    fullObservation += `El cliente es reincidente: ${clienteReincidente}\n`;
-  if (tipoServicio) fullObservation += `Tipo de servicio: ${tipoServicio}\n`;
-  if (formDataForSurvey["Tipo de servicio General"])
-    fullObservation += `Tipo de servicio General: ${formDataForSurvey["Tipo de servicio General"]}\n`;
-  if (estadoLuces)
-    fullObservation += `Tiene Luces en que estado ?: ${estadoLuces}\n`;
-  if (Decodificador) fullObservation += `Decodificador: ${Decodificador}\n`;
-  if (reinicioElectrico)
-    fullObservation += `Reinicio Eléctrico: ${reinicioElectrico}\n`;
-  if (cableHDMIAV) fullObservation += `Cable HDMI/AV: ${cableHDMIAV}\n`;
-  if (observacionTV) fullObservation += `Observacion TV: ${observacionTV}\n`;
-
-  // Special handling for "OBSERVACIÓN CON INFORMACIÓN COMPLETA EN LA VARIBALE SONDEO"
-  if (observacionCompletaSondeo) {
-    // Apply cleaning similar to survey.js for this specific observation
-    let cleanedSondeoObservation = observacionCompletaSondeo
-      .replace("obs: ", "")
-      .replace("OBS:", "");
-    cleanedSondeoObservation = cleanedSondeoObservation
-      .replace(/, ,/g, ",")
-      .replace(/  +/g, " ")
-      .trim();
-    cleanedSondeoObservation = cleanedSondeoObservation.replace(
-      /(SI|NO|Si|No|si|no)\s*([A-Z¿])/g,
-      "$1\n$2"
-    );
-
-    fullObservation += `${cleanedSondeoObservation}\n`;
-  }
-
-  // Apply formatting for better style (similar to survey.js)
-  // Update the main form's observation textarea
-  const observacionForm = document.getElementById("observacionForm");
-  observacionForm.value = sondeo; // Use .value for textareas
-
-  // Hide the "Observación Final Generada" section as it's no longer needed
-  document.getElementById("finalObservationContainer").style.display = "none";
-  document.getElementById("observacionFinal").style.display = "none";
-
-  // The "Enviar Sondeo" button is handled by generarObservacionPrincipal and limpiarFormulario
-
-  // Update the main observation container with the final, full observation
-  document.getElementById("observacionCompleta").value = fullObservation;
-
-  const rutForHistory = document.getElementById("clienteRUT")?.value || "N/A"; // Extract RUT directly from the form
-  const observacionCompletaText = document.getElementById(
-    "observacionCompleta"
-  ).value; // Get the text from observacionCompleta
-
-
-  copyToClipboard(fullObservation).then(success => {
-    if (!success) {
-      window.showNotification("No se pudo copiar al portapapeles automáticamente", "warning");
-    }
-    // Note: generarObservacionFinal closes 'genobs' modal at the end, 
-    // but doesn't explicitly open 'modalCopia' in the original code.
-    // If the user expects 'modalCopia' here too, we should add it, 
-    // but strictly following the original flow, we just copy.
-    // However, to be consistent with 'Principal', let's notify success via notification at least.
-    if (success) {
-      window.showNotification("Observación final copiada al portapapeles", "success");
-    }
-  });
-  guardarEnHistorial(
-    observacionCompletaText, // Use observacionCompleta text for history
-    rutForHistory,
-    { ...formDataForSurvey },
-    formDataForSurvey.surveyUrl, // Save the generated survey URL
-    formDataForSurveyPersiste.surveyUrl // Save the generated persiste URL
-  );
-  mostrarHistorial(); // Call mostrarHistorial to update the display
-
-  if (window.addLogEntry) {
-    window.addLogEntry('execution', 'Observación final generada correctamente.');
-  }
-
-  window.cerrarModal("genobs");
 };
 
 
