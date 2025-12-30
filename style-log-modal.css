@@ -1,0 +1,193 @@
+/* Terminal Style Log Modal - Chrome DevTools Dark Theme Mimic */
+#logModal .log-modal-content {
+    background-color: #242424;
+    /* Chrome Dark Body */
+    border: 1px solid #333;
+    border-radius: 6px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    width: 90%;
+    max-width: 1000px;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
+}
+
+.log-header-terminal {
+    background-color: #333333;
+    /* Toolbar bg */
+    padding: 6px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.terminal-title {
+    color: #a8c7fa;
+    /* Light Blue implies interactive/file */
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.terminal-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.copy-terminal-btn {
+    background: transparent;
+    border: 1px solid #5f6368;
+    color: #e8eaed;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+}
+
+.copy-terminal-btn:hover {
+    background-color: #3c4043;
+    border-color: #8ab4f8;
+}
+
+.copy-terminal-btn i {
+    font-size: 14px;
+}
+
+.close-btn-terminal {
+    background: transparent;
+    border: none;
+    color: #9aa0a6;
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.close-btn-terminal:hover {
+    background-color: #3c4043;
+    color: #e8eaed;
+}
+
+.terminal-body {
+    flex: 1;
+    padding: 8px 0;
+    /* Vertical padding only */
+    overflow-y: auto;
+    background-color: #242424;
+    font-size: 12px;
+    /* Standard DevTools font size */
+    line-height: 1.4;
+    color: #e8eaed;
+    /* Default Text */
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* Scrollbar Styling */
+.terminal-body::-webkit-scrollbar {
+    width: 10px;
+    background: #202124;
+}
+
+.terminal-body::-webkit-scrollbar-track {
+    background: #202124;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+    background: #5f6368;
+    border: 1px solid #202124;
+    border-radius: 0;
+}
+
+.terminal-body::-webkit-scrollbar-thumb:hover {
+    background: #80868b;
+}
+
+/* Log Lines */
+.log-line {
+    padding: 2px 20px;
+    border-bottom: 1px solid #2b2b2b;
+    display: flex;
+    align-items: center;
+    /* Center align items vertically */
+    position: relative;
+    font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
+}
+
+.log-line:hover {
+    background-color: #2a2d32;
+}
+
+.error-copy-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 128, 128, 0.3);
+    color: #ff8080;
+    cursor: pointer;
+    margin-left: auto;
+    /* Push to right */
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: none;
+    /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.error-copy-btn i {
+    font-size: 14px;
+}
+
+.error-copy-btn:hover {
+    background-color: rgba(255, 128, 128, 0.1);
+    border-color: #ff8080;
+}
+
+/* Show button on hover of the log line */
+.log-line.error:hover .error-copy-btn,
+.log-line.failure:hover .error-copy-btn {
+    display: flex;
+}
+
+/* Colors based on Chrome DevTools */
+.log-line.error,
+.log-line.failure {
+    background-color: #290000;
+    color: #ff8080;
+    border-left: 4px solid #ff8080;
+    padding-left: 16px;
+    /* Adjust for border */
+}
+
+.log-line.warning {
+    background-color: #332b00;
+    color: #fce8b2;
+    border-left: 4px solid #fce8b2;
+    padding-left: 16px;
+}
+
+.log-line.info {
+    color: #e8eaed;
+}
+
+.log-timestamp {
+    color: #9aa0a6;
+    margin-right: 12px;
+    font-size: 11px;
+    user-select: none;
+    min-width: 70px;
+    /* Align content */
+    display: inline-block;
+}

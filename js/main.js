@@ -46,6 +46,7 @@ import {
   limpiarGenobsCampos,
   validateGenobsForm,
 } from "./genobs.js"; // Import the new module
+import { addLogEntry } from "./logModal.js"; // Import logging function
 import { initializeTemplatesModal, openTemplatesModal } from "./templates.js"; // Import templates module
 
 
@@ -338,6 +339,8 @@ window.guardarTipificacion = async (tipo) => {
 // Function removed - login visibility is now handled within login.js
 
 window.generarObservacionPrincipal = () => {
+  // Log start of generation
+  addLogEntry('execution', 'Iniciando generación de observación principal...');
   const datosForm = document.getElementById("datosForm");
   mainFormData = {}; // Clear previous data
 
@@ -395,6 +398,7 @@ window.generarObservacionPrincipal = () => {
       "Por favor, complete todos los campos obligatorios del formulario principal.",
       "error"
     );
+    addLogEntry('failure', 'Error en generación principal: Campos obligatorios incompletos (Nombre, RUT, etc).');
     if (firstEmptyMainField) {
       firstEmptyMainField.focus(); // Focus on the first empty field
     }
@@ -620,8 +624,16 @@ window.generarObservacionPrincipal = () => {
   document.getElementById("observacionCompletaContainer").style.display =
     "flex";
   document.getElementById("observacionCompletaWrapper").style.display = "block";
-  copyToClipboard(preliminaryObservation); // Copy the preliminary observation
-  window.abrirModal("modalCopia"); // Open the copy confirmation modal
+
+
+  // Try to copy, but open modal regardless of success
+  // We use the result to properly notify, but we don't block the UI
+  copyToClipboard(preliminaryObservation).then(success => {
+    if (!success) {
+      window.showNotification("No se pudo copiar al portapapeles automáticamente", "warning");
+    }
+    window.abrirModal("modalCopia"); // Open the copy confirmation modal
+  });
 
   // Save the preliminary observation to history
   const rutForHistory = document.getElementById("clienteRUT")?.value || "N/A";
@@ -633,6 +645,8 @@ window.generarObservacionPrincipal = () => {
     formDataForSurveyPersiste.surveyUrl // Save the generated persiste URL
   );
   mostrarHistorial(); // Update history display
+
+  addLogEntry('execution', 'Observación principal generada correctamente.');
 };
 
 window.limpiarFormulario = (showNotification = true) => {
@@ -719,7 +733,11 @@ window.limpiarTipificacion = () => {
 
 
 window.generarObservacionFinal = () => {
+  // Log start of final generation
+  addLogEntry('execution', 'Iniciando generación de observación final...');
+
   if (!validateGenobsForm()) {
+    addLogEntry('failure', 'Error en generación final: Validación de formulario fallida.');
     return; // Stop if validation fails
   }
 
@@ -908,7 +926,21 @@ window.generarObservacionFinal = () => {
   const observacionCompletaText = document.getElementById(
     "observacionCompleta"
   ).value; // Get the text from observacionCompleta
-  copyToClipboard(fullObservation); // Copy the full observation
+
+
+  copyToClipboard(fullObservation).then(success => {
+    if (!success) {
+      window.showNotification("No se pudo copiar al portapapeles automáticamente", "warning");
+    }
+    // Note: generarObservacionFinal closes 'genobs' modal at the end, 
+    // but doesn't explicitly open 'modalCopia' in the original code.
+    // If the user expects 'modalCopia' here too, we should add it, 
+    // but strictly following the original flow, we just copy.
+    // However, to be consistent with 'Principal', let's notify success via notification at least.
+    if (success) {
+      window.showNotification("Observación final copiada al portapapeles", "success");
+    }
+  });
   guardarEnHistorial(
     observacionCompletaText, // Use observacionCompleta text for history
     rutForHistory,
@@ -917,6 +949,10 @@ window.generarObservacionFinal = () => {
     formDataForSurveyPersiste.surveyUrl // Save the generated persiste URL
   );
   mostrarHistorial(); // Call mostrarHistorial to update the display
+
+  if (window.addLogEntry) {
+    window.addLogEntry('execution', 'Observación final generada correctamente.');
+  }
 
   window.cerrarModal("genobs");
 };
@@ -936,15 +972,52 @@ window.toggleRedesUnificadasOtros = () => {
 };
 
 // Helper function to copy text to clipboard
-const copyToClipboard = (text) => {
-  navigator.clipboard
-    .writeText(text)
-    .then(() => {
-      console.log("Text copied to clipboard");
-    })
-    .catch((err) => {
-      console.error("Failed to copy text: ", err);
-    });
+export const copyToClipboard = async (text) => {
+  if (!text) return;
+
+  try {
+    // Try Modern Async Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      console.log("Text copied to clipboard via Clipboard API");
+      return true;
+    }
+    // Fallback for non-secure contexts (HTTP) or older browsers
+    else {
+      throw new Error("Clipboard API unavailable");
+    }
+  } catch (err) {
+    console.warn("Clipboard API failed, trying fallback:", err);
+
+    // Fallback: textArea hack
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+
+      // Ensure it's not visible but part of DOM
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      textArea.style.top = "0";
+      document.body.appendChild(textArea);
+
+      textArea.focus();
+      textArea.select();
+
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+
+      if (successful) {
+        console.log("Text copied via execCommand fallback");
+        return true;
+      } else {
+        console.error("execCommand fallback failed");
+        return false;
+      }
+    } catch (fallbackErr) {
+      console.error("All copy methods failed:", fallbackErr);
+      return false;
+    }
+  }
 };
 
 

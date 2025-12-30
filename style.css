@@ -177,8 +177,25 @@ header {
   /* Removed hover effects */
   cursor: default;
   /* Change cursor to default */
-  transition: none;
   /* Remove transition */
+}
+
+.header-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--icon-color);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.header-action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--accent-primary);
 }
 
 /* Removed .user-info:hover rule */
@@ -802,9 +819,10 @@ input:checked+.slider:before {
   gap: 10px;
 }
 
-text-align: right;
-width: 100px;
-/* Fixed width for actions column */
+.shortcuts-table td:last-child {
+  text-align: right;
+  width: 100px;
+  /* Fixed width for actions column */
 }
 
 .shortcuts-table .shortcut-actions button {

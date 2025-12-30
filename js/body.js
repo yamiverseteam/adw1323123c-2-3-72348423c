@@ -31,6 +31,10 @@ document.body.innerHTML = `
               <div class="date-time" id="fechaHora"></div>
             </div>
             <div class="user-info">
+              <button id="headerLogBtn" class="header-action-btn" onclick="window.openLogModal()" title="Logs del Sistema">
+                <span class="material-icons">terminal</span>
+              </button>
+              <span class="separator" style="width: 1px; height: 20px; background: #ffffff20; margin: 0 10px;"></span>
               <span class="material-icons">person</span>
               <span id="user-cedula"></span>
               <button id="logout-button" class="logout-button">
@@ -580,6 +584,23 @@ document.body.innerHTML = `
           <tbody></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Modal Logs -->
+    <div id="logModal" class="modal">
+        <div class="modal-content log-modal-content">
+            <div class="log-header-terminal">
+                <span class="terminal-title">Console</span>
+                <div class="terminal-actions">
+                    <button class="close-btn-terminal" onclick="window.closeLogModal()" title="Cerrar">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+            </div>
+            <div id="log-terminal-body" class="terminal-body">
+                <!-- Logs will be appended here dynamically -->
+            </div>
+        </div>
     </div>
 
     <!-- Modal SpeedTest -->

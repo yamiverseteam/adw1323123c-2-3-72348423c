@@ -9,38 +9,15 @@
     const config = {
         checkInterval: 500,
         threshold: 160,
-        enabled: true,
+        enabled: false, // Disabled by user request
         maxRetries: 3
     };
 
     let devtoolsOpen = false;
 
-    // Prevent context menu
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-
-    // Prevent keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-        // F12
-        if (e.key === 'F12' || e.keyCode === 123) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-
-        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
-        if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C' || e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-
-        // Ctrl+U (View Source)
-        if (e.ctrlKey && (e.key === 'U' || e.keyCode === 85)) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    });
+    // Protection disabled
+    // document.addEventListener('contextmenu', (e) => e.preventDefault());
+    // document.addEventListener('keydown', (e) => { ... }); (removed)
 
     /**
      * Debugger "Bomb"

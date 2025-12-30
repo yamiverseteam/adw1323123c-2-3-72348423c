@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="style-templates.css" />
   <link rel="stylesheet" href="style-ai-template.css" />
   <link rel="stylesheet" href="preloader.css" />
+  <link rel="stylesheet" href="style-log-modal.css" />
   <script>
     // Estilos Temas app//
     (function () {
@@ -142,6 +143,25 @@
     import { abrirModalTipificacion } from "./js/main.js";
     window.abrirModalTipificacion = abrirModalTipificacion;
   </script>
+  <script type="module" src="js/logModal.js"></script>
+  <!-- Modal Logs -->
+  <div id="logModal" class="modal">
+    <div class="modal-content log-modal-content">
+      <div class="log-header-terminal">
+        <span class="terminal-title">system_logs.log</span>
+        <div class="terminal-actions">
+          <button class="copy-terminal-btn" onclick="window.copyLogToClipboard()">
+            <i class="material-icons">content_copy</i> Copiar
+          </button>
+          <button class="close-btn-terminal" onclick="window.closeLogModal()">×</button>
+        </div>
+      </div>
+      <div id="log-terminal-body" class="terminal-body">
+        <!-- Logs will be appended here as divs -->
+      </div>
+    </div>
+  </div>
+
   <!-- Logout Confirmation Modal Container -->
   <div id="logoutModalContainer"></div>
 

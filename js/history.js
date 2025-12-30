@@ -632,23 +632,53 @@ export function mostrarHistorial() {
 }
 
 // Helper function to be added in the global scope or imported where needed
-window.copyToClipboard = (text) => {
+window.copyToClipboard = async (text) => {
   if (typeof text !== "string" || !text) {
     window.showNotification("No hay observación para copiar.", "error");
     return;
   }
-  navigator.clipboard
-    .writeText(text)
-    .then(() => {
-      window.showNotification(
-        "¡Observación copiada al portapapeles!",
-        "success"
-      );
-    })
-    .catch((err) => {
-      console.error("Error al copiar la observación:", err);
-      window.showNotification("Error al copiar la observación.", "error");
-    });
+
+  try {
+    // Try Modern Async Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      window.showNotification("¡Observación copiada al portapapeles!", "success");
+    }
+    // Fallback
+    else {
+      throw new Error("Clipboard API unavailable");
+    }
+  } catch (err) {
+    console.warn("Clipboard API failed in history, trying fallback:", err);
+
+    // Fallback: textArea hack
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+
+      // Ensure it's not visible but part of DOM
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      textArea.style.top = "0";
+      document.body.appendChild(textArea);
+
+      textArea.focus();
+      textArea.select();
+
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+
+      if (successful) {
+        window.showNotification("¡Observación copiada al portapapeles!", "success");
+      } else {
+        console.error("execCommand fallback failed in history");
+        window.showNotification("Error manual: No se pudo copiar. Intente seleccionar y copiar manualmente.", "error");
+      }
+    } catch (fallbackErr) {
+      console.error("All copy methods failed in history:", fallbackErr);
+      window.showNotification("Error: No se pudo acceder al portapapeles.", "error");
+    }
+  }
 };
 
 window.eliminarDelHistorial = (date) => {
